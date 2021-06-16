@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>Form</class>
+    <widget class="QWidget" name="Form">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>633</width>
+                <height>464</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Form</string>
+        </property>
+        <widget class="QWidget" name="gridLayoutWidget">
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>611</width>
+                    <height>441</height>
+                </rect>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_main">
+                <item row="1" column="0">
+                    <widget class="QTabWidget" name="tabWidget">
+                        <property name="currentIndex">
+                            <number>1</number>
+                        </property>
+                        <widget class="QWidget" name="viewMarks">
+                            <attribute name="title">
+                                <string>Просмотр ценок</string>
+                            </attribute>
+                            <widget class="QWidget" name="gridLayoutWidget_2">
+                                <property name="geometry">
+                                    <rect>
+                                        <x>0</x>
+                                        <y>0</y>
+                                        <width>641</width>
+                                        <height>411</height>
+                                    </rect>
+                                </property>
+                                <layout class="QGridLayout" name="gridLayout_viewMarks">
+                                    <item row="0" column="2">
+                                        <widget class="QComboBox" name="comboBox_year">
+                                            <item>
+                                                <property name="text">
+                                                    <string>2018-2019</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>2019-2020</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>2020-2021</string>
+                                                </property>
+                                            </item>
+                                        </widget>
+                                    </item>
+                                    <item row="0" column="1">
+                                        <widget class="QComboBox" name="comboBox_classLetter"/>
+                                    </item>
+                                    <item row="0" column="0">
+                                        <widget class="QComboBox" name="comboBox_classNum"/>
+                                    </item>
+                                    <item row="0" column="4">
+                                        <widget class="QComboBox" name="comboBox_property">
+                                            <item>
+                                                <property name="text">
+                                                    <string>Все люди</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Одна 2</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Одна 3</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Одна 4</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Одна 5</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Две 2</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Две 3</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Две 4</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Две 5</string>
+                                                </property>
+                                            </item>
+                                        </widget>
+                                    </item>
+                                    <item row="0" column="3">
+                                        <widget class="QComboBox" name="comboBox_type"/>
+                                    </item>
+                                    <item row="0" column="5">
+                                        <widget class="QComboBox" name="comboBox_isKicked">
+                                            <item>
+                                                <property name="text">
+                                                    <string>Оба типа</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Обучаются сейчас</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Отчислены/ушли</string>
+                                                </property>
+                                            </item>
+                                        </widget>
+                                    </item>
+                                    <item row="1" column="0" colspan="6">
+                                        <widget class="QTableWidget" name="tableWidget_viewMarks"/>
+                                    </item>
+                                </layout>
+                            </widget>
+                        </widget>
+                        <widget class="QWidget" name="editMarks">
+                            <attribute name="title">
+                                <string>Изменение оценок</string>
+                            </attribute>
+                            <widget class="QWidget" name="gridLayoutWidget_3">
+                                <property name="geometry">
+                                    <rect>
+                                        <x>0</x>
+                                        <y>0</y>
+                                        <width>601</width>
+                                        <height>411</height>
+                                    </rect>
+                                </property>
+                                <layout class="QGridLayout" name="gridLayout_editMarks">
+                                    <item row="4" column="2">
+                                        <widget class="QComboBox" name="comboBox_year_2">
+                                            <item>
+                                                <property name="text">
+                                                    <string>2018-2019</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>2019-2020</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>2020-2021</string>
+                                                </property>
+                                            </item>
+                                        </widget>
+                                    </item>
+                                    <item row="4" column="3">
+                                        <widget class="QComboBox" name="comboBox_type_2"/>
+                                    </item>
+                                    <item row="4" column="0">
+                                        <widget class="QComboBox" name="comboBox_classNum_2"/>
+                                    </item>
+                                    <item row="4" column="1">
+                                        <widget class="QComboBox" name="comboBox_classLetter_2"/>
+                                    </item>
+                                    <item row="5" column="0" colspan="5">
+                                        <widget class="QTableWidget" name="tableWidget_editMarks"/>
+                                    </item>
+                                    <item row="4" column="4">
+                                        <widget class="QCheckBox" name="checkBox">
+                                            <property name="text">
+                                                <string>Ученики без оценок</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                </layout>
+                            </widget>
+                        </widget>
+                        <widget class="QWidget" name="editSubjects">
+                            <attribute name="title">
+                                <string>Изменение предметов</string>
+                            </attribute>
+                            <widget class="QWidget" name="gridLayoutWidget_4">
+                                <property name="geometry">
+                                    <rect>
+                                        <x>0</x>
+                                        <y>0</y>
+                                        <width>611</width>
+                                        <height>421</height>
+                                    </rect>
+                                </property>
+                                <layout class="QGridLayout" name="gridLayout_editSubjects">
+                                    <item row="0" column="0">
+                                        <widget class="QComboBox" name="comboBox_classNum_3"/>
+                                    </item>
+                                    <item row="0" column="1">
+                                        <widget class="QComboBox" name="comboBox_classLetter_3"/>
+                                    </item>
+                                    <item row="1" column="0" colspan="2">
+                                        <widget class="QTableWidget" name="tableWidget_editSubjects">
+                                            <property name="rowCount">
+                                                <number>0</number>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                </layout>
+                            </widget>
+                        </widget>
+                    </widget>
+                </item>
+                <item row="0" column="0">
+                    <widget class="QPushButton" name="pushButton_cancel">
+                        <property name="text">
+                            <string>Назад</string>
+                        </property>
+                    </widget>
+                </item>
+            </layout>
+        </widget>
+    </widget>
+    <resources/>
+    <connections/>
+</ui>

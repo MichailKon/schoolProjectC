@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>335</width>
+       <height>285</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+     <widget class="QWidget" name="gridLayoutWidget">
+         <property name="geometry">
+             <rect>
+                 <x>0</x>
+                 <y>10</y>
+                 <width>323</width>
+                 <height>269</height>
+             </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+             <item row="4" column="0">
+                 <widget class="QLabel" name="label_5">
+                     <property name="text">
+                         <string>Адрес</string>
+                     </property>
+                 </widget>
+             </item>
+             <item row="7" column="0">
+                 <widget class="QPushButton" name="btn_save">
+                     <property name="text">
+                         <string>Сохранить</string>
+                     </property>
+                 </widget>
+             </item>
+             <item row="6" column="1" colspan="2">
+                 <widget class="QComboBox" name="comboBox_gender">
+                     <item>
+                         <property name="text">
+                             <string>Женский</string>
+                         </property>
+                     </item>
+                     <item>
+                         <property name="text">
+                             <string>Мужской</string>
+                         </property>
+                     </item>
+                 </widget>
+             </item>
+             <item row="0" column="0">
+                 <widget class="QLabel" name="label">
+                     <property name="text">
+                         <string>ФИО</string>
+                     </property>
+                 </widget>
+             </item>
+             <item row="5" column="0">
+                 <widget class="QLabel" name="label_6">
+                     <property name="text">
+                         <string>ФИО Родителя</string>
+                     </property>
+                 </widget>
+             </item>
+             <item row="4" column="1" colspan="2">
+                 <widget class="QLineEdit" name="lineEdit_address"/>
+             </item>
+             <item row="6" column="0">
+                 <widget class="QLabel" name="label_7">
+                     <property name="text">
+                         <string>Пол</string>
+                     </property>
+                 </widget>
+             </item>
+             <item row="3" column="0">
+                 <widget class="QLabel" name="label_4">
+                     <property name="text">
+                         <string>Начало обучения</string>
+                     </property>
+                 </widget>
+             </item>
+             <item row="7" column="1">
+                 <widget class="QPushButton" name="btn_delete">
+                     <property name="text">
+                         <string>Удалить</string>
+                     </property>
+                 </widget>
+             </item>
+             <item row="5" column="1" colspan="2">
+                 <widget class="QLineEdit" name="lineEdit_parentName"/>
+             </item>
+             <item row="7" column="2">
+                 <widget class="QPushButton" name="btn_cancel">
+                     <property name="text">
+                         <string>Отменить</string>
+                     </property>
+                 </widget>
+             </item>
+             <item row="2" column="0">
+                 <widget class="QLabel" name="label_3">
+                     <property name="text">
+                         <string>Дата рождения</string>
+                     </property>
+                 </widget>
+             </item>
+             <item row="1" column="0">
+                 <widget class="QLabel" name="label_2">
+                     <property name="text">
+                         <string>Класс</string>
+                     </property>
+                 </widget>
+             </item>
+             <item row="3" column="1" colspan="2">
+                 <widget class="QDateEdit" name="dateEdit_startStudy"/>
+             </item>
+             <item row="2" column="1" colspan="2">
+                 <widget class="QDateEdit" name="dateEdit_birthDate"/>
+             </item>
+             <item row="1" column="1" colspan="2">
+                 <widget class="QLineEdit" name="lineEdit_class"/>
+             </item>
+             <item row="0" column="1" colspan="2">
+                 <widget class="QLineEdit" name="lineEdit_name"/>
+             </item>
+         </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

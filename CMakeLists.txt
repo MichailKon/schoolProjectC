@@ -8,11 +8,14 @@ set(CMAKE_AUTOUIC ON)
 
 set(QT_VERSION 5)
 set(REQUIRED_LIBS Core Gui Widgets)
-set(REQUIRED_LIBS_QUALIFIED Qt5::Core Qt5::Gui Qt5::Widgets)
+set(REQUIRED_LIBS_QUALIFIED Qt5::Core Qt5::Gui Qt5::Widgets Qt5Sql)
 
 include_directories(uis)
+include_directories(databases)
 
-add_executable(${PROJECT_NAME} main.cpp main_window.cpp main_window.h)
+configure_file(databases/students.sqlite3 databases/students.sqlite3 COPYONLY)
+
+add_executable(${PROJECT_NAME} main.cpp main_window.cpp main_window.h students_review.cpp students_review.h useful_funcs.cpp useful_funcs.h)
 
 if(NOT CMAKE_PREFIX_PATH)
     message(WARNING "CMAKE_PREFIX_PATH is not defined, you may need to set it "

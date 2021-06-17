@@ -9,15 +9,41 @@
 
 
 mainWindow::mainWindow(QWidget *parent) :
-        QWidget(parent), ui(new Ui::mainWindow) {
+        QWidget(parent), ui(new Ui::mainWindow),
+        conn(QSqlDatabase::addDatabase("QSQLITE")),
+        reviewWindow(nullptr) {
     ui->setupUi(this);
+    connectSlots();
+
+    conn.setDatabaseName("databases/students.sqlite3");
+    if (!conn.open()) {
+        qDebug() << conn.lastError().text();
+    }
 }
 
 mainWindow::~mainWindow() {
     delete ui;
+    conn.close();
 }
 
 void mainWindow::connectSlots() {
+    connect(ui->pushButton_pupils, &QPushButton::clicked, this, &mainWindow::openReview);
+}
+
+void mainWindow::openReview() {
+    if (reviewWindow == nullptr) {
+        reviewWindow = new studentsReview(this);
+        reviewWindow->setDatabase(conn);
+    }
+    reviewWindow->printStudents();
+    reviewWindow->show();
+    this->hide();
+}
+
+void mainWindow::openMarks() {
 
 }
 
+void mainWindow::openStats() {
+
+}

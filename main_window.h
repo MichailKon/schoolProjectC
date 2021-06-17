@@ -6,6 +6,10 @@
 #define SCHOOLPROJECTC_MAIN_WINDOW_H
 
 #include <QWidget>
+#include <QDebug>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlDriver>
+#include "students_review.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -20,16 +24,21 @@ public:
 
     ~mainWindow() override;
 
-private:
-    Ui::mainWindow *ui;
-
-    void connectSlots();
+private slots:
 
     void openStats();
 
     void openReview();
 
     void openMarks();
+
+private:
+    Ui::mainWindow *ui;
+    studentsReview *reviewWindow;
+
+    void connectSlots();
+
+    QSqlDatabase conn;
 };
 
 

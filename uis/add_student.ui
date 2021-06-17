@@ -1,129 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>addStudent</class>
+ <widget class="QWidget" name="addStudent">
   <property name="geometry">
    <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>243</width>
-       <height>266</height>
+    <x>0</x>
+    <y>0</y>
+    <width>243</width>
+    <height>266</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-     <widget class="QWidget" name="gridLayoutWidget">
-         <property name="geometry">
-             <rect>
-                 <x>0</x>
-                 <y>10</y>
-                 <width>237</width>
-                 <height>246</height>
-             </rect>
-         </property>
-         <layout class="QGridLayout" name="gridLayout">
-             <item row="3" column="1">
-                 <widget class="QDateEdit" name="dateEdit_startStudy"/>
-             </item>
-             <item row="5" column="0">
-                 <widget class="QLabel" name="label_6">
-                     <property name="text">
-                         <string>ФИО Родителя</string>
-                     </property>
-                 </widget>
-             </item>
-             <item row="0" column="0">
-                 <widget class="QLabel" name="label">
-                     <property name="text">
-                         <string>ФИО</string>
-                     </property>
-                 </widget>
-             </item>
-             <item row="2" column="1">
-                 <widget class="QDateEdit" name="dateEdit_birthDate">
-                     <property name="dateTime">
-                         <datetime>
-                             <hour>0</hour>
-                             <minute>0</minute>
-                             <second>0</second>
-                             <year>2000</year>
-                             <month>1</month>
-                             <day>1</day>
-                         </datetime>
-                     </property>
-                 </widget>
-             </item>
-             <item row="5" column="1">
-                 <widget class="QLineEdit" name="lineEdit_parentName"/>
-             </item>
-             <item row="0" column="1">
-                 <widget class="QLineEdit" name="lineEdit_name"/>
-             </item>
-             <item row="3" column="0">
-                 <widget class="QLabel" name="label_4">
-                     <property name="text">
-                         <string>Начало обучения</string>
-                     </property>
-                 </widget>
-             </item>
-             <item row="6" column="0">
-                 <widget class="QLabel" name="label_7">
-                     <property name="text">
-                         <string>Пол</string>
-                     </property>
-                 </widget>
-             </item>
-             <item row="4" column="1">
-                 <widget class="QLineEdit" name="lineEdit_address"/>
-             </item>
-             <item row="1" column="1">
-                 <widget class="QLineEdit" name="lineEdit_class"/>
-             </item>
-             <item row="4" column="0">
-                 <widget class="QLabel" name="label_5">
-                     <property name="text">
-                         <string>Адрес</string>
-                     </property>
-                 </widget>
-             </item>
-             <item row="2" column="0">
-                 <widget class="QLabel" name="label_3">
-                     <property name="text">
-                         <string>Дата рождения</string>
-                     </property>
-                 </widget>
-             </item>
-             <item row="1" column="0">
-                 <widget class="QLabel" name="label_2">
-                     <property name="text">
-                         <string>Класс</string>
-                     </property>
-                 </widget>
-             </item>
-             <item row="6" column="1">
-                 <widget class="QComboBox" name="comboBox_gender">
-                     <item>
-                         <property name="text">
-                             <string>Женский</string>
-                         </property>
-                     </item>
-                     <item>
-                         <property name="text">
-                             <string>Мужской</string>
-                         </property>
-                     </item>
-                 </widget>
-             </item>
-             <item row="7" column="0" colspan="2">
-                 <widget class="QPushButton" name="btn_add">
-                     <property name="text">
-                         <string>Добавить</string>
-                     </property>
-                 </widget>
-             </item>
-         </layout>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="3" column="1">
+      <widget class="QDateEdit" name="dateEdit_startStudy"/>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>ФИО Родителя</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>ФИО</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QDateEdit" name="dateEdit_birthDate">
+       <property name="dateTime">
+        <datetime>
+         <hour>0</hour>
+         <minute>0</minute>
+         <second>0</second>
+         <year>2000</year>
+         <month>1</month>
+         <day>1</day>
+        </datetime>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="lineEdit_parentName"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="lineEdit_name"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Начало обучения</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Пол</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="lineEdit_address"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="lineEdit_class"/>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Адрес</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Дата рождения</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Класс</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QComboBox" name="comboBox_gender"/>
+     </item>
+     <item row="7" column="0" colspan="2">
+      <widget class="QPushButton" name="btn_add">
+       <property name="text">
+        <string>Добавить</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

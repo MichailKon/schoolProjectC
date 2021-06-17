@@ -16,6 +16,7 @@
 #include <QtSql/QSqlRecord>
 #include <QtSql/QSqlError>
 #include "useful_funcs.h"
+#include "add_student.h"
 
 enum ColumnTypes {
     kText,

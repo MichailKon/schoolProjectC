@@ -62,7 +62,7 @@ void studentsReview::printStudents() {
     QSqlQuery query = generateQuery();
     query.exec();
 
-    QVector<QString> columns;
+    QStringList columns;
     {
         QSqlRecord localRecord = query.record();
         for (int var = 0; var < localRecord.count(); var++) {
@@ -74,10 +74,11 @@ void studentsReview::printStudents() {
 
     QStringList fullNames;
     while (query.next()) {
+        qDebug() << query.value(3);
         int nowRow = ui->tableWidget->rowCount();
         ui->tableWidget->setRowCount(nowRow + 1);
 
-        QVector<QString> nowValues;
+        QStringList nowValues;
         for (int i = 0; i < columns.size(); i++) {
             nowValues.append(query.value(i).toString());
         }
@@ -174,5 +175,8 @@ void studentsReview::slotDeleteStudent() {
 }
 
 void studentsReview::slotAddStudent() {
-    qDebug() << 4;
+    auto adding = new addStudent(this);
+    adding->setDatabase(conn);
+    adding->exec();
+    printStudents();
 }

@@ -16,7 +16,7 @@
 #include <QtSql/QSqlRecord>
 #include <QtSql/QSqlError>
 #include "useful_funcs.h"
-#include "add_student.h"
+#include "add_edit_student.h"
 
 enum ColumnTypes {
     kText,
@@ -71,6 +71,7 @@ private:
     Ui::studentsReview *ui;
     QSqlDatabase conn;
     QWidget *parent;
+    QVector<int> displayedStudents;
 
     void connectSlots();
 

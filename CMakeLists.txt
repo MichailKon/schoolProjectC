@@ -15,7 +15,7 @@ include_directories(databases)
 
 configure_file(databases/students.sqlite3 databases/students.sqlite3 COPYONLY)
 
-add_executable(${PROJECT_NAME} main.cpp main_window.cpp main_window.h students_review.cpp students_review.h useful_funcs.cpp useful_funcs.h add_student.cpp add_student.h)
+add_executable(${PROJECT_NAME} main.cpp main_window.cpp main_window.h students_review.cpp students_review.h useful_funcs.cpp useful_funcs.h add_edit_student.cpp add_edit_student.h)
 
 if(NOT CMAKE_PREFIX_PATH)
     message(WARNING "CMAKE_PREFIX_PATH is not defined, you may need to set it "

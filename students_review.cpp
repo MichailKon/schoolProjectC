@@ -58,6 +58,7 @@ void studentsReview::connectSlots() {
 
 void studentsReview::printStudents() {
     ui->tableWidget->setVisible(false);
+    displayedStudents.clear();
 
     QSqlQuery query = generateQuery();
     query.exec();
@@ -74,7 +75,7 @@ void studentsReview::printStudents() {
 
     QStringList fullNames;
     while (query.next()) {
-        qDebug() << query.value(3);
+        displayedStudents.push_back(query.value(0).toInt());
         int nowRow = ui->tableWidget->rowCount();
         ui->tableWidget->setRowCount(nowRow + 1);
 
@@ -163,20 +164,82 @@ void studentsReview::slotCustomMenuRequested(QPoint pos) {
 }
 
 void studentsReview::slotEditStudent() {
-    qDebug() << 1;
+    int row = ui->tableWidget->selectionModel()->currentIndex().row();
+    if (row < 0 || row >= displayedStudents.size()) return;
+    auto adding = new addEditStudent(this);
+    adding->setDatabase(conn);
+    adding->setNowType(kEditStudent);
+    QSqlQuery q(conn);
+    q.prepare("SELECT full_name, pupil_class, birth_date, start_study_date,"
+              "address, parent_full_name, student_gender FROM pupils "
+              "WHERE student_id=?");
+    q.addBindValue(displayedStudents[row]);
+    if (!q.exec()) {
+        qDebug() << q.lastError();
+        return;
+    }
+    q.next();
+    adding->setData(q.value(0).toString(), q.value(1).toInt(),
+                    QDate::fromString(q.value(2).toString(), "yyyy-MM-dd"),
+                    QDate::fromString(q.value(3).toString(), "yyyy-MM-dd"),
+                    q.value(4).toString(), q.value(5).toString(), q.value(6).toInt());
+    adding->setStudentId(displayedStudents[row]);
+    adding->exec();
+    printStudents();
 }
 
 void studentsReview::slotRemoveStudent() {
-    qDebug() << 2;
+    int row = ui->tableWidget->selectionModel()->currentIndex().row();
+    if (row < 0 || row >= displayedStudents.size()) return;
+    if (QMessageBox::warning(this,
+                             "Исключить/вернуть",
+                             "Вы уверены, что хотите исключить/удалить этого ученика(цу)",
+                             QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
+        QSqlQuery q(conn);
+        q.prepare("UPDATE pupils SET kicked=NOT kicked WHERE student_id=?");
+        q.addBindValue(displayedStudents[row]);
+        q.exec();
+        printStudents();
+    }
 }
 
 void studentsReview::slotDeleteStudent() {
-    qDebug() << 3;
+    int row = ui->tableWidget->selectionModel()->currentIndex().row();
+    if (row < 0 || row >= displayedStudents.size()) return;
+    int id = displayedStudents[row];
+    if (QMessageBox::warning(this,
+                             "Исключить/вернуть",
+                             "Вы уверены, что хотите исключить/удалить этого ученика(цу)\n"
+                             "Это действие нельзя отменить!",
+                             QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
+        QSqlQuery q(conn);
+        q.prepare("DELETE FROM pupils WHERE student_id=?");
+        q.addBindValue(id);
+        if (!q.exec()) {
+            qDebug() << q.lastError();
+        }
+
+        q.clear();
+        q.prepare("DELETE FROM marks WHERE which_mark=?");
+        q.addBindValue(id);
+        if (!q.exec()) {
+            qDebug() << q.lastError();
+        }
+
+        q.clear();
+        q.prepare("DELETE FROM diplomas WHERE which_diploma=?");
+        q.addBindValue(id);
+        if (!q.exec()) {
+            qDebug() << q.lastError();
+        }
+        printStudents();
+    }
 }
 
 void studentsReview::slotAddStudent() {
-    auto adding = new addStudent(this);
+    auto adding = new addEditStudent(this);
     adding->setDatabase(conn);
+    adding->setNowType(kAddStudent);
     adding->exec();
     printStudents();
 }

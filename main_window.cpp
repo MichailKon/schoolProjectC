@@ -11,7 +11,8 @@
 mainWindow::mainWindow(QWidget *parent) :
         QWidget(parent), ui(new Ui::mainWindow),
         conn(QSqlDatabase::addDatabase("QSQLITE")),
-        reviewWindow(nullptr) {
+        reviewWindow(nullptr),
+        marksWindow(nullptr) {
     ui->setupUi(this);
     connectSlots();
 
@@ -28,20 +29,25 @@ mainWindow::~mainWindow() {
 
 void mainWindow::connectSlots() {
     connect(ui->pushButton_pupils, &QPushButton::clicked, this, &mainWindow::openReview);
+    connect(ui->pushButton_marks, &QPushButton::clicked, this, &mainWindow::openMarks);
 }
 
 void mainWindow::openReview() {
     if (reviewWindow == nullptr) {
         reviewWindow = new studentsReview(this);
-        reviewWindow->setDatabase(conn);
     }
-    reviewWindow->printStudents();
+    reviewWindow->setDatabase(conn);
     reviewWindow->show();
     this->hide();
 }
 
 void mainWindow::openMarks() {
-
+    if (marksWindow == nullptr) {
+        marksWindow = new editViewMarks(this);
+    }
+    marksWindow->setDatabase(conn);
+    marksWindow->show();
+    this->hide();
 }
 
 void mainWindow::openStats() {

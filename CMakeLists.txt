@@ -15,12 +15,15 @@ include_directories(databases)
 
 configure_file(databases/students.sqlite3 databases/students.sqlite3 COPYONLY)
 
-add_executable(${PROJECT_NAME} main.cpp main_window.cpp main_window.h students_review.cpp students_review.h useful_funcs.cpp useful_funcs.h add_edit_student.cpp add_edit_student.h)
+set(SOURCES main.cpp main_window.cpp add_edit_student.cpp students_review.cpp useful_funcs.cpp)
+set(HEADERS add_edit_student.h main_window.h students_review.h useful_funcs.h edit_view_marks.cpp edit_view_marks.h)
 
-if(NOT CMAKE_PREFIX_PATH)
+add_executable(${PROJECT_NAME} main.cpp ${SOURCES} ${HEADERS})
+
+if (NOT CMAKE_PREFIX_PATH)
     message(WARNING "CMAKE_PREFIX_PATH is not defined, you may need to set it "
-                    "(-DCMAKE_PREFIX_PATH=\"path/to/Qt/lib/cmake\" or -DCMAKE_PREFIX_PATH=/usr/include/{host}/qt{version}/ on Ubuntu)")
-endif()
+            "(-DCMAKE_PREFIX_PATH=\"path/to/Qt/lib/cmake\" or -DCMAKE_PREFIX_PATH=/usr/include/{host}/qt{version}/ on Ubuntu)")
+endif ()
 
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)
 target_link_libraries(${PROJECT_NAME} ${REQUIRED_LIBS_QUALIFIED})

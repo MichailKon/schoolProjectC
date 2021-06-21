@@ -63,9 +63,13 @@ private:
 
     void connectSlots();
 
-    void addStudent();
+    void addStudent(const QString& name, const int& studClass, const QString& birthDate,
+                    const QString &startStudyDate, const QString &address,
+                    const QString &parentName, const int &gender);
 
-    void editStudent();
+    void editStudent(const QString& name, const int& studClass, const QString& birthDate,
+                     const QString &startStudyDate, const QString &address,
+                     const QString &parentName, const int &gender);
 };
 
 

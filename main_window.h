@@ -10,6 +10,7 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlDriver>
 #include "students_review.h"
+#include "edit_view_marks.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -35,6 +36,7 @@ private slots:
 private:
     Ui::mainWindow *ui;
     studentsReview *reviewWindow;
+    editViewMarks *marksWindow;
 
     void connectSlots();
 

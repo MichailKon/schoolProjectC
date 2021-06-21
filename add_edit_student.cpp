@@ -29,12 +29,55 @@ void addEditStudent::setDatabase(const QSqlDatabase &other) {
 }
 
 void addEditStudent::save() {
+    QString name = ui->lineEdit_name->text();
+
+    QSqlQuery query(conn);
+    query.prepare("SELECT class_id FROM classes WHERE class_number=? AND class_letter=?");
+    query.addBindValue(ui->lineEdit_classNumber->text());
+    query.addBindValue(ui->lineEdit_classLetter->text());
+    if (!query.exec()) {
+        funcs::dataBaseError(this, query);
+        return;
+    }
+    query.next();
+    if (!query.isValid()) {
+        QMessageBox::critical(this,
+                              "Проблемы с классом",
+                              "В базе данных нет класса " + ui->lineEdit_classNumber->text() +
+                              ui->lineEdit_classLetter->text(),
+                              QMessageBox::Ok);
+        return;
+    }
+    int classId = query.value(0).toInt();
+
+    QString birth = ui->dateEdit_birthDate->date().toString("yyyy-MM-dd");
+    QString start = ui->dateEdit_startStudy->date().toString("yyyy-MM-dd");
+    QString address = ui->lineEdit_address->text();
+    QString parent = ui->lineEdit_parentName->text();
+
+    query.clear();
+    query.prepare("SELECT gender_type_id FROM gender_types WHERE gender_type=?");
+    query.addBindValue(ui->comboBox_gender->currentText());
+    if (!query.exec()) {
+        funcs::dataBaseError(this, query);
+        return;
+    }
+    query.next();
+    if (!query.isValid()) {
+        QMessageBox::critical(this,
+                              "Проблемы с полом",
+                              "В базе данных нет пола " + ui->comboBox_gender->currentText(),
+                              QMessageBox::Ok);
+        return;
+    }
+    int gender = query.value(0).toInt();
+
     switch (nowType) {
         case kAddStudent:
-            addStudent();
+            addStudent(name, classId, birth, start, address, parent, gender);
             break;
         case kEditStudent:
-            editStudent();
+            editStudent(name, classId, birth, start, address, parent, gender);
             break;
     }
 }
@@ -52,15 +95,13 @@ void addEditStudent::prepareToEdit() {
     ui->btn_save->setText("Сохранить");
 }
 
-void addEditStudent::addStudent() {
+void addEditStudent::addStudent(const QString &name, const int &studClass, const QString &birthDate,
+                                const QString &startStudyDate, const QString &address,
+                                const QString &parentName, const int &gender) {
     int res = QMessageBox::question(this, "Отмена", "Вы точно хотите добавить",
                                     QMessageBox::Yes, QMessageBox::No);
     if (res == QMessageBox::Yes) {
         QSqlQuery query(conn);
-        auto[name, studClass, birthDate, startStudyDate, address, parentName, gender] =
-        funcs::getStudentInfo(query, ui->lineEdit_name,
-                              ui->lineEdit_class, ui->dateEdit_birthDate, ui->dateEdit_startStudy,
-                              ui->lineEdit_address, ui->lineEdit_parentName, ui->comboBox_gender);
 
         query.prepare("INSERT INTO pupils (full_name, pupil_class, birth_date, start_study_date, address,"
                       "parent_full_name, student_gender) VALUES (?,?,?,?,?,?,?)");
@@ -71,21 +112,21 @@ void addEditStudent::addStudent() {
         query.addBindValue(address);
         query.addBindValue(parentName);
         query.addBindValue(gender);
-        query.exec();
+        if (!query.exec()) {
+            funcs::dataBaseError(this, query);
+        }
         close();
     }
 }
 
-void addEditStudent::editStudent() {
+void addEditStudent::editStudent(const QString &name, const int &studClass, const QString &birthDate,
+                                 const QString &startStudyDate, const QString &address,
+                                 const QString &parentName, const int &gender) {
     int res = QMessageBox::warning(this, "Отмена",
                                    "Вы точно хотите изменить информацию? (Это действие нельзя отменить)",
                                    QMessageBox::Yes, QMessageBox::No);
     if (res == QMessageBox::Yes) {
         QSqlQuery query(conn);
-        auto[name, studClass, birthDate, startStudyDate, address, parentName, gender] =
-        funcs::getStudentInfo(query, ui->lineEdit_name,
-                              ui->lineEdit_class, ui->dateEdit_birthDate, ui->dateEdit_startStudy,
-                              ui->lineEdit_address, ui->lineEdit_parentName, ui->comboBox_gender);
 
         query.prepare("UPDATE pupils SET pupil_class=?, full_name=?, birth_date=?, start_study_date=?, "
                       "address=?, parent_full_name=?, student_gender=? WHERE student_id=?");
@@ -98,7 +139,7 @@ void addEditStudent::editStudent() {
         query.addBindValue(gender);
         query.addBindValue(studentId);
         if (!query.exec()) {
-            qDebug() << query.lastError();
+            funcs::dataBaseError(this, query);
         }
         close();
     }
@@ -125,11 +166,19 @@ void addEditStudent::setData(const QString &pupilName, const int &pupilClass, co
     q.prepare("SELECT class_number, class_letter FROM classes WHERE class_id=?");
     q.addBindValue(pupilClass);
     if (!q.exec()) {
-        qDebug() << q.lastError();
+        funcs::dataBaseError(this, q);
         return;
     }
     q.next();
-    ui->lineEdit_class->setText(q.value(0).toString() + q.value(1).toString());
+    if (!q.isValid()) {
+        QMessageBox::critical(this,
+                              "Проблемы с учеником",
+                              "В базе данных нет класса этого ученика",
+                              QMessageBox::Ok);
+        cancel();
+    }
+    ui->lineEdit_classNumber->setText(q.value(0).toString());
+    ui->lineEdit_classLetter->setText(q.value(1).toString());
     ui->dateEdit_birthDate->setDate(pupilBirth);
     ui->dateEdit_startStudy->setDate(pupilStart);
     ui->lineEdit_address->setText(pupilAddress);
@@ -138,10 +187,17 @@ void addEditStudent::setData(const QString &pupilName, const int &pupilClass, co
     q.prepare("SELECT gender_type FROM gender_types WHERE gender_type_id=?");
     q.addBindValue(pupilGender);
     if (!q.exec()) {
-        qDebug() << q.lastError();
+        funcs::dataBaseError(this, q);
         return;
     }
     q.next();
+    if (!q.isValid()) {
+        QMessageBox::critical(this,
+                              "Проблемы с учеником",
+                              "В базе данных нет пола этого ученика",
+                              QMessageBox::Ok);
+        cancel();
+    }
     ui->comboBox_gender->setCurrentText(q.value(0).toString());
 }
 

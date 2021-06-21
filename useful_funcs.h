@@ -15,9 +15,11 @@
 #include <QObject>
 #include <QDebug>
 #include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlRecord>
+#include <QMessageBox>
 
 namespace funcs {
-//    template<class T, class C>
     QMap<QString, QString> compress(const QStringList &, const QStringList &);
 
     QPair<QString, QStringList> getPupilClassQuery(const QString &column, const QString &num,
@@ -27,19 +29,16 @@ namespace funcs {
 
     QStringList parseLet(const QString &s);
 
-    std::tuple<QString, int, QString, QString, QString, QString, int> getStudentInfo(
-            QDialog *win,
-            QSqlQuery query,
-            QLineEdit *pupilName,
-            QLineEdit *pupilClass,
-            QDateEdit *pupilBirth,
-            QDateEdit *pupilStart,
-            QLineEdit *pupilAddress,
-            QLineEdit *pupilParent,
-            QComboBox *pupilGender
-    );
+    template<class T>
+    void dataBaseError(T *win, const QSqlQuery &query) {
+        qDebug() << query.lastError();
+        QMessageBox::critical(win,
+                              "Проблемы с базой данных",
+                              "Проблема с базой данных: " + query.lastError().text(),
+                              QMessageBox::Ok);
+    }
 
-    QPair<QString, QString> getClassNumberLetter(const QString &t);
+    QStringList getColumns(const QSqlQuery &q);
 }
 
 namespace classes {

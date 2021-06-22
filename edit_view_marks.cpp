@@ -67,31 +67,53 @@ void editViewMarks::printViewMarks() {
     if (ui->comboBox_property->currentText() != allProps) {
         QStringList pupils;
         auto[cnt, mark] = *propTypes.find(ui->comboBox_property->currentText());
+        QMap<QString, int> cntMarks;
         ui->tableWidget_viewMarks->setColumnCount(cnt);
         for (int i = 1; i <= cnt; i++) {
             auto *item = new QTableWidgetItem("Предмет " + QString::number(i));
             ui->tableWidget_viewMarks->setHorizontalHeaderItem(i - 1, item);
         }
 
-        QMap<QString, int> mustCol;
+        QMap<int, int> mustCol;
+        int mt = propTypes.find(ui->comboBox_property->currentText())->markType();
+        int mc = propTypes.find(ui->comboBox_property->currentText())->cntMarks();
         while (q.next()) {
-            int nowRow = ui->tableWidget_viewMarks->rowCount();
-            ui->tableWidget_viewMarks->setRowCount(nowRow + 1);
-
             QStringList nowValues;
             for (int i = 0; i < columns.size(); i++) {
                 nowValues.append(q.value(i).toString());
             }
             auto data = funcs::compress(columns, nowValues);
-            // there was a filter in last code, but i think, that it is useless (also i'm too lazy to do it)
-            pupils.append(data["full_name"]);
-
-            auto *newItem = new QTableWidgetItem(data["subject_type"]);
-            int row = pupils.indexOf(data["full_name"]);
-            int col = mustCol[data["full_name"]]++;
-            ui->tableWidget_viewMarks->setItem(row, col, newItem);
+            if (data["mark_value"].toInt() == mt) {
+                cntMarks[data["full_name"]]++;
+            }
         }
+
+        QMapIterator it(cntMarks);
+        while (it.hasNext()) {
+            it.next();
+            if (it.value() == mc) {
+                pupils.append(it.key());
+            }
+        }
+
+        ui->tableWidget_viewMarks->setRowCount(pupils.size());
+        qSort(pupils);
         ui->tableWidget_viewMarks->setVerticalHeaderLabels(pupils);
+
+        if (!q.first()) return;
+        do {
+            QStringList nowValues;
+            for (int i = 0; i < columns.size(); i++) {
+                nowValues.append(q.value(i).toString());
+            }
+            auto data = funcs::compress(columns, nowValues);
+            if (data["mark_value"].toInt() == mt && pupils.contains(data["full_name"])) {
+                int row = pupils.indexOf(data["full_name"]);
+                int col = mustCol[data["which_mark"].toInt()]++;
+                auto *newItem = new QTableWidgetItem(data["subject_type"]);
+                ui->tableWidget_viewMarks->setItem(row, col, newItem);
+            }
+        } while (q.next());
     } else {
         QStringList subjects;
         QMap<int, int> pupil2row;
@@ -146,7 +168,7 @@ QSqlQuery editViewMarks::getStudentQuery(const QLineEdit *num, const QLineEdit *
     QStringList data;
 
     query += "SELECT full_name, subject_type, mark_value, mark_id, which_mark, "
-             "subject, mark_year, type, actual_class "
+             "subject, mark_year, type, actual_class, mark_value_id "
              "FROM marks "
              "INNER JOIN pupils ON which_mark = student_id "
              "INNER JOIN mark_values ON value = mark_value_id "
@@ -174,31 +196,6 @@ QSqlQuery editViewMarks::getStudentQuery(const QLineEdit *num, const QLineEdit *
         query += " AND kicked=0";
     }
 
-    if (prop != nullptr && prop->currentText() != allProps) {
-        QString temp_query = "SELECT DISTINCT which_mark, "
-                             "SUM (CASE value WHEN (SELECT mark_value_id FROM mark_values WHERE mark_value=5) THEN "
-                             "1 ELSE 0 END) AS \"5\", "
-                             "SUM (CASE value WHEN (SELECT mark_value_id FROM mark_values WHERE mark_value=4) THEN "
-                             "1 ELSE 0 END) AS \"4\", "
-                             "SUM (CASE value WHEN (SELECT mark_value_id FROM mark_values WHERE mark_value=3) THEN "
-                             "1 ELSE 0 END) AS \"3\", "
-                             "SUM (CASE value WHEN (SELECT mark_value_id FROM mark_values WHERE mark_value=2) THEN "
-                             "1 ELSE 0 END) AS \"2\", "
-                             "SUM (CASE value WHEN (SELECT mark_value_id FROM mark_values WHERE mark_value='Н/А') THEN "
-                             "1 ELSE 0 END) AS \"Н/А\" "
-                             "FROM marks "
-                             "WHERE mark_year=? AND "
-                             "EXISTS(SELECT * FROM class_subject WHERE subject_id2=subject AND "
-                             "class_id2={table}) "
-                             "GROUP BY which_mark";
-        temp_query = temp_query.arg(column);
-        query += " AND which_mark IN (SELECT which_mark FROM (" + temp_query + ") WHERE \"Н/А\"=0 AND "
-                                                                               "\"?\"=?";
-        data.append(year->currentText());
-        data.append(QString::number(propTypes.find(prop->currentText())->markType()));
-        data.append(QString::number(propTypes.find(prop->currentText())->cntMarks()));
-        query += ")";
-    }
     res.prepare(query);
     for (const auto &i : data) {
         res.addBindValue(i);

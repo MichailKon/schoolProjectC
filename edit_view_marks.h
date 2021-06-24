@@ -19,6 +19,11 @@ enum KickedType {
     kKicked,
 };
 
+enum ShownSubjectsType {
+    kShowMarks,
+    kShowExist
+};
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class editViewMarks; }
 QT_END_NAMESPACE
@@ -81,16 +86,17 @@ private:
             {"Отчислены", kKicked}
     };
 
+    const QMap<QString, ShownSubjectsType> convertShown = {
+            {"Только предметы с оценками", kShowMarks},
+            {"Только предметы из 3 вкладки", kShowExist}
+    };
+
     void prepare();
 
     void connectSlots();
 
-    QSqlQuery getStudentQuery(const QLineEdit* num,
-                              const QLineEdit *let,
-                              const QComboBox* year = nullptr,
-                              const QComboBox* markType = nullptr,
-                              const QComboBox* prop = nullptr,
-                              KickedType kicked = kAny);
+    QSqlQuery getStudentQuery(const QLineEdit *num, const QLineEdit *let, const QComboBox *year,
+                              const QComboBox *markType, ShownSubjectsType shownSubject, KickedType kicked);
 };
 
 #endif //SCHOOLPROJECTC_EDIT_VIEW_MARKS_H

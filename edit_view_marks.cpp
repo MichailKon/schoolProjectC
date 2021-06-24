@@ -31,10 +31,19 @@ void editViewMarks::prepare() {
         ui->comboBox_type->addItem(q.value(0).toString());
     }
 
-    QMapIterator it(convertKicked);
-    while (it.hasNext()) {
-        it.next();
-        ui->comboBox_isKicked->addItem(it.key());
+    {
+        QMapIterator it(convertKicked);
+        while (it.hasNext()) {
+            it.next();
+            ui->comboBox_isKicked->addItem(it.key());
+        }
+    }
+    {
+        QMapIterator it(convertShown);
+        while (it.hasNext()) {
+            it.next();
+            ui->comboBox_shownSubjects->addItem(it.key());
+        }
     }
 }
 
@@ -57,7 +66,7 @@ void editViewMarks::printViewMarks() {
     ui->tableWidget_viewMarks->setColumnCount(0);
 
     QSqlQuery q = getStudentQuery(ui->lineEdit_classNum, ui->lineEdit_classLetter, ui->comboBox_year, ui->comboBox_type,
-                                  ui->comboBox_property,
+                                  convertShown.find(ui->comboBox_shownSubjects->currentText()).value(),
                                   convertKicked.find(ui->comboBox_isKicked->currentText()).value());
     if (!q.exec()) {
         funcs::dataBaseError(this, q);
@@ -162,7 +171,7 @@ void editViewMarks::printViewMarks() {
 }
 
 QSqlQuery editViewMarks::getStudentQuery(const QLineEdit *num, const QLineEdit *let, const QComboBox *year,
-                                         const QComboBox *markType, const QComboBox *prop, KickedType kicked) {
+                                         const QComboBox *markType, ShownSubjectsType shownSubject, KickedType kicked) {
     QSqlQuery res(conn);
     QString query;
     QStringList data;
@@ -172,9 +181,12 @@ QSqlQuery editViewMarks::getStudentQuery(const QLineEdit *num, const QLineEdit *
              "FROM marks "
              "INNER JOIN pupils ON which_mark = student_id "
              "INNER JOIN mark_values ON value = mark_value_id "
-             "INNER JOIN subject_types ON subject = subject_id "
-             "WHERE EXISTS(SELECT * FROM class_subject WHERE subject_id2=subject AND "
-             "class_id2=actual_class)";
+             "INNER JOIN subject_types ON subject = subject_id";
+    if (shownSubject == kShowExist) {
+        query += " WHERE EXISTS(SELECT * FROM class_subject WHERE subject_id2=subject AND class_id2=actual_class)";
+    } else {
+        query += " WHERE 1=1";
+    }
 
     QString column = "actual_class";
     QPair<QString, QStringList> classInfo = funcs::getPupilClassQuery(column, num->text(), let->text());

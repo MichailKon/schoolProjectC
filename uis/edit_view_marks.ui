@@ -26,47 +26,20 @@
          <string>Просмотр ценок</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="4">
-          <widget class="QComboBox" name="comboBox_isKicked">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QComboBox" name="comboBox_type"/>
-         </item>
-         <item row="3" column="0" colspan="6">
-          <widget class="QPushButton" name="pushButton_printView">
-           <property name="text">
-            <string>Вывести информацию</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="lineEdit_classLetter">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0">
           <widget class="QLineEdit" name="lineEdit_classNum">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="maxLength">
+            <number>20</number>
+           </property>
           </widget>
          </item>
-         <item row="0" column="5">
+         <item row="0" column="6">
           <widget class="QComboBox" name="comboBox_property">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -121,13 +94,13 @@
            </item>
           </widget>
          </item>
-         <item row="1" column="0" colspan="6">
+         <item row="1" column="0" colspan="7">
           <widget class="QTableWidget" name="tableWidget_viewMarks"/>
          </item>
          <item row="0" column="2">
           <widget class="QComboBox" name="comboBox_year">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -143,6 +116,39 @@
             </property>
            </item>
           </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QComboBox" name="comboBox_isKicked">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineEdit_classLetter">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QComboBox" name="comboBox_type"/>
+         </item>
+         <item row="3" column="0" colspan="7">
+          <widget class="QPushButton" name="pushButton_printView">
+           <property name="text">
+            <string>Вывести информацию</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QComboBox" name="comboBox_shownSubjects"/>
          </item>
         </layout>
        </widget>

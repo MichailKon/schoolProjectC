@@ -16,10 +16,17 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_main">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="pushButton_cancel">
+       <property name="text">
+        <string>Назад</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0">
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="viewMarks">
         <attribute name="title">
@@ -157,47 +164,68 @@
          <string>Изменение оценок</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="7">
+          <widget class="QCheckBox" name="checkBox">
+           <property name="text">
+            <string>С оценками</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QComboBox" name="comboBox_year2">
+           <item>
+            <property name="text">
+             <string>2018</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2019</string>
+            </property>
+           </item>
+          </widget>
+         </item>
          <item row="0" column="0">
-          <layout class="QGridLayout" name="gridLayout_editMarks">
-           <item row="4" column="2">
-            <widget class="QComboBox" name="comboBox_year_2">
-             <item>
-              <property name="text">
-               <string>2018-2019</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>2019-2020</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>2020-2021</string>
-              </property>
-             </item>
-            </widget>
+          <widget class="QComboBox" name="comboBox_classNum2">
+           <item>
+            <property name="text">
+             <string>3</string>
+            </property>
            </item>
-           <item row="4" column="3">
-            <widget class="QComboBox" name="comboBox_type_2"/>
+           <item>
+            <property name="text">
+             <string>2</string>
+            </property>
            </item>
-           <item row="4" column="0">
-            <widget class="QComboBox" name="comboBox_classNum_2"/>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QComboBox" name="comboBox_shownSubjects2"/>
+         </item>
+         <item row="0" column="6">
+          <widget class="QComboBox" name="comboBox_isKicked2"/>
+         </item>
+         <item row="2" column="0" colspan="8">
+          <widget class="QPushButton" name="pushButton_printEdit">
+           <property name="text">
+            <string>Вывести информацию</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="8">
+          <widget class="QTableWidget" name="tableWidget_editMarks"/>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="comboBox_classLetter2">
+           <item>
+            <property name="text">
+             <string>В</string>
+            </property>
            </item>
-           <item row="4" column="1">
-            <widget class="QComboBox" name="comboBox_classLetter_2"/>
-           </item>
-           <item row="5" column="0" colspan="5">
-            <widget class="QTableWidget" name="tableWidget_editMarks"/>
-           </item>
-           <item row="4" column="4">
-            <widget class="QCheckBox" name="checkBox">
-             <property name="text">
-              <string>Ученики без оценок</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          </widget>
+         </item>
+         <item row="0" column="3" colspan="2">
+          <widget class="QComboBox" name="comboBox_type2"/>
          </item>
         </layout>
        </widget>
@@ -225,13 +253,6 @@
          </item>
         </layout>
        </widget>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QPushButton" name="pushButton_cancel">
-       <property name="text">
-        <string>Назад</string>
-       </property>
       </widget>
      </item>
     </layout>

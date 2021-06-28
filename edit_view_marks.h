@@ -11,6 +11,7 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlRecord>
 #include <QtAlgorithms>
+#include <QTableWidgetItem>
 #include "useful_funcs.h"
 
 enum KickedType {
@@ -62,6 +63,10 @@ private slots:
 
     void printViewMarks();
 
+    void printEditMarks();
+
+    void editMark(const QTableWidgetItem *item);
+
 private:
     Ui::editViewMarks *ui;
     QWidget *parent;
@@ -72,31 +77,34 @@ private:
             {"Одна 3", {1, 3}},
             {"Одна 4", {1, 4}},
             {"Одна 5", {1, 5}},
-            {"Две 2", {2, 2}},
-            {"Две 3", {2, 3}},
-            {"Две 4", {2, 4}},
-            {"Две 5", {2, 5}},
+            {"Две 2",  {2, 2}},
+            {"Две 3",  {2, 3}},
+            {"Две 4",  {2, 4}},
+            {"Две 5",  {2, 5}},
     };
 
     const QString allProps = "Все люди";
 
     const QMap<QString, KickedType> convertKicked = {
-            {"Оба типа", kAny},
+            {"Оба типа",  kAny},
             {"Обучаются", kStudying},
             {"Отчислены", kKicked}
     };
 
     const QMap<QString, ShownSubjectsType> convertShown = {
-            {"Только предметы с оценками", kShowMarks},
+            {"Только предметы с оценками",   kShowMarks},
             {"Только предметы из 3 вкладки", kShowExist}
     };
+
+    QVector<QPair<QString, int>> editStudentIds, editSubjectIds;
 
     void prepare();
 
     void connectSlots();
 
-    QSqlQuery getStudentQuery(const QLineEdit *num, const QLineEdit *let, const QComboBox *year,
-                              const QComboBox *markType, ShownSubjectsType shownSubject, KickedType kicked);
+    QSqlQuery getStudentQuery(const QString &num, const QString &let, const QString &year,
+                              const QString &markType, ShownSubjectsType shownSubject, KickedType kicked,
+                              const QCheckBox *haveMarks = nullptr);
 };
 
 #endif //SCHOOLPROJECTC_EDIT_VIEW_MARKS_H

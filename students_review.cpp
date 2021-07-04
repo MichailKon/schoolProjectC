@@ -97,7 +97,7 @@ void studentsReview::printStudents() {
                 ui->tableWidget->setItem(nowRow, i, newItem);
             } else if (str2column[i].second == kDate) {
                 QTableWidgetItem *newItem;
-                QDate now = QDate::fromString(data[str2column[i].first], "yyyy-MM-dd");
+                QDate now = QDate::fromString(data[str2column[i].first], "yyyyMMdd");
                 newItem = new QTableWidgetItem(now.toString());
                 ui->tableWidget->setItem(nowRow, i, newItem);
             }

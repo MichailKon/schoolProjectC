@@ -11,11 +11,6 @@ studentsReview::studentsReview(QWidget *parent) :
     QWidget(), parent(parent), ui(new Ui::studentsReview) {
     ui->setupUi(this);
 
-    connectSlots();
-
-    ui->spinBox_year->blockSignals(true);
-    ui->lineEdit_classLetter->blockSignals(true);
-    ui->lineEdit_classNum->blockSignals(true);
     ui->spinBox_year->setValue(kAnyYear);
     ui->tableWidget->setColumnCount(6);
     ui->tableWidget->setHorizontalHeaderLabels({
@@ -35,6 +30,8 @@ studentsReview::studentsReview(QWidget *parent) :
     while (q.next()) {
         ui->comboBox_gender->addItem(q.value(0).toString());
     }
+
+    connectSlots();
 }
 
 studentsReview::~studentsReview() {
@@ -52,9 +49,12 @@ void studentsReview::cancel() {
 
 void studentsReview::connectSlots() {
     connect(ui->pushButton_cancel, &QPushButton::clicked, this, &studentsReview::cancel);
+    connect(ui->lineEdit_classNum, &QLineEdit::textEdited, this, &studentsReview::printStudents);
+    connect(ui->lineEdit_classLetter, &QLineEdit::textEdited, this, &studentsReview::printStudents);
     connect(ui->pushButton_printStudent, &QPushButton::clicked, this, &studentsReview::printStudents);
     connect(ui->comboBox_gender, &QComboBox::currentTextChanged, this, &studentsReview::printStudents);
-    connect(ui->spinBox_year, SIGNAL(valueChanged(int)), this, SLOT(printStudents()));
+    connect(ui->comboBox_isKicked, &QComboBox::currentTextChanged, this, &studentsReview::printStudents);
+    connect(ui->spinBox_year, QOverload<int>::of(&QSpinBox::valueChanged), this, &studentsReview::printStudents);
 }
 
 void studentsReview::printStudents() {

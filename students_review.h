@@ -24,12 +24,12 @@ enum ColumnTypes {
 };
 
 const QVector<QPair<QString, ColumnTypes>> str2column = {
-        {"class",            kText},
-        {"birth_date",       kDate},
-        {"start_study_date", kDate},
-        {"address",          kText},
-        {"parent_full_name", kText},
-        {"gender_type",      kText},
+    {"class", kText},
+    {"birth_date", kDate},
+    {"start_study_date", kDate},
+    {"address", kText},
+    {"parent_full_name", kText},
+    {"gender_type", kText},
 };
 
 const QString kAnyGender = "Любой";
@@ -40,16 +40,16 @@ namespace Ui { class studentsReview; }
 QT_END_NAMESPACE
 
 class studentsReview : public QWidget {
-Q_OBJECT
+ Q_OBJECT
 
-public:
+ public:
     explicit studentsReview(QWidget *parent = nullptr);
 
     ~studentsReview() override;
 
-    void printStudents();
+ private slots:
 
-private slots:
+    void printStudents();
 
     void cancel();
 
@@ -63,11 +63,11 @@ private slots:
 
     void slotCustomMenuRequested(QPoint pos);
 
-public slots:
+ public slots:
 
     void setDatabase(const QSqlDatabase &conn);
 
-private:
+ private:
     Ui::studentsReview *ui;
     QSqlDatabase conn;
     QWidget *parent;
@@ -77,6 +77,5 @@ private:
 
     QSqlQuery generateQuery();
 };
-
 
 #endif //SCHOOLPROJECTC_STUDENTS_REVIEW_H

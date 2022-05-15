@@ -7,9 +7,8 @@
 #include "students_review.h"
 #include "uis/ui_students_review.h"
 
-
 studentsReview::studentsReview(QWidget *parent) :
-        QWidget(), parent(parent), ui(new Ui::studentsReview) {
+    QWidget(), parent(parent), ui(new Ui::studentsReview) {
     ui->setupUi(this);
 
     connectSlots();
@@ -20,8 +19,8 @@ studentsReview::studentsReview(QWidget *parent) :
     ui->spinBox_year->setValue(kAnyYear);
     ui->tableWidget->setColumnCount(6);
     ui->tableWidget->setHorizontalHeaderLabels({
-                                                       "Класс", "Дата рождения",
-                                                       "Дата начала обучения", "Адрес", "ФИО родителя", "Пол"
+                                                   "Класс", "Дата рождения",
+                                                   "Дата начала обучения", "Адрес", "ФИО родителя", "Пол"
                                                });
     ui->tableWidget->resizeColumnsToContents();
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -54,6 +53,8 @@ void studentsReview::cancel() {
 void studentsReview::connectSlots() {
     connect(ui->pushButton_cancel, &QPushButton::clicked, this, &studentsReview::cancel);
     connect(ui->pushButton_printStudent, &QPushButton::clicked, this, &studentsReview::printStudents);
+    connect(ui->comboBox_gender, &QComboBox::currentTextChanged, this, &studentsReview::printStudents);
+    connect(ui->spinBox_year, SIGNAL(valueChanged(int)), this, SLOT(printStudents()));
 }
 
 void studentsReview::printStudents() {
@@ -97,7 +98,7 @@ void studentsReview::printStudents() {
                 ui->tableWidget->setItem(nowRow, i, newItem);
             } else if (str2column[i].second == kDate) {
                 QTableWidgetItem *newItem;
-                QDate now = QDate::fromString(data[str2column[i].first], "yyyyMMdd");
+                QDate now = QDate::fromString(data[str2column[i].first], "yyyy-MM-dd");
                 newItem = new QTableWidgetItem(now.toString());
                 ui->tableWidget->setItem(nowRow, i, newItem);
             }
@@ -115,10 +116,10 @@ QSqlQuery studentsReview::generateQuery() {
                 "INNER JOIN gender_types gt on pupils.student_gender = gt.gender_type_id "
                 "INNER JOIN classes c on pupils.pupil_class = c.class_id ";
     QPair<QString, QStringList> classInfo =
-            funcs::getPupilClassQuery("pupil_class", ui->lineEdit_classNum->text(), ui->lineEdit_classLetter->text());
+        funcs::getPupilClassQuery("pupil_class", ui->lineEdit_classNum->text(), ui->lineEdit_classLetter->text());
 
     q += " WHERE " + classInfo.first + " ";
-    for (const auto &i : classInfo.second) {
+    for (const auto &i: classInfo.second) {
         data.append(i);
     }
 
@@ -136,7 +137,7 @@ QSqlQuery studentsReview::generateQuery() {
 
     QSqlQuery res(conn);
     res.prepare(q);
-    for (auto &i : data) {
+    for (auto &i: data) {
         res.addBindValue(i);
     }
     return res;
@@ -144,22 +145,27 @@ QSqlQuery studentsReview::generateQuery() {
 
 void studentsReview::slotCustomMenuRequested(QPoint pos) {
     auto *menu = new QMenu(this);
-    auto *editStudent = new QAction("Редактировать", this);
-    auto *kickStudent = new QAction("Исключить/вернуть", this);
-    auto *deleteStudent = new QAction("Полностью удалить", this);
-    auto *addStudent = new QAction("Добавить ученика", this);
-    connect(editStudent, SIGNAL(triggered()),
-            this, SLOT(slotEditStudent()));
-    connect(kickStudent, SIGNAL(triggered()),
-            this, SLOT(slotRemoveStudent()));
-    connect(deleteStudent, SIGNAL(triggered()),
-            this, SLOT(slotDeleteStudent()));
-    connect(addStudent, SIGNAL(triggered()),
-            this, SLOT(slotAddStudent()));
-    menu->addAction(editStudent);
-    menu->addAction(kickStudent);
-    menu->addAction(deleteStudent);
-    menu->addAction(addStudent);
+    if (!ui->tableWidget->selectedItems().empty()) {
+        auto *editStudent = new QAction("Редактировать", this);
+        connect(editStudent, SIGNAL(triggered()),
+                this, SLOT(slotEditStudent()));
+        menu->addAction(editStudent);
+
+        auto *kickStudent = new QAction("Исключить/вернуть", this);
+        connect(kickStudent, SIGNAL(triggered()),
+                this, SLOT(slotRemoveStudent()));
+        menu->addAction(kickStudent);
+
+        auto *deleteStudent = new QAction("Полностью удалить", this);
+        connect(deleteStudent, SIGNAL(triggered()),
+                this, SLOT(slotDeleteStudent()));
+        menu->addAction(deleteStudent);
+    } else {
+        auto *addStudent = new QAction("Добавить ученика", this);
+        connect(addStudent, SIGNAL(triggered()),
+                this, SLOT(slotAddStudent()));
+        menu->addAction(addStudent);
+    }
     menu->popup(ui->tableWidget->viewport()->mapToGlobal(pos));
 }
 

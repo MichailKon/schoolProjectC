@@ -27,8 +27,8 @@ const QVector<QPair<QString, ColumnTypes>> str2column = {
     {"class", kText},
     {"birth_date", kDate},
     {"start_study_date", kDate},
-    {"address", kText},
-    {"parent_full_name", kText},
+//    {"address", kText},
+//    {"parent_full_name", kText},
     {"gender_type", kText},
 };
 
@@ -62,6 +62,10 @@ class studentsReview : public QWidget {
     void slotAddStudent();
 
     void slotCustomMenuRequested(QPoint pos);
+
+    void prepareNumbers();
+
+    void prepareLetters();
 
  public slots:
 

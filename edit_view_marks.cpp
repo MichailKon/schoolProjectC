@@ -496,8 +496,10 @@ void editViewMarks::printSubjects() {
 
     for (int i = 0; i < ui->tableWidget_editSubjects->rowCount(); i++) {
         for (int j = 0; j < ui->tableWidget_editSubjects->columnCount(); j++) {
-            ui->tableWidget_editSubjects->setItem(i, j, new QTableWidgetItem(""));
-            ui->tableWidget_editSubjects->item(i, j)->setBackground(Qt::red);
+            auto item = new QTableWidgetItem("");
+            item->setBackground(Qt::red);
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+            ui->tableWidget_editSubjects->setItem(i, j, item);
         }
     }
 
@@ -532,8 +534,6 @@ void editViewMarks::printSubjects() {
         assert(x != -1);
         ui->tableWidget_editSubjects->item(x, y)->setBackground(Qt::green);
     }
-
-    ui->tableWidget_editSubjects->blockSignals(false);
 }
 
 void editViewMarks::subjectsEditMenuRequested(QPoint pos) {
@@ -554,7 +554,6 @@ void editViewMarks::toggleSubject() {
     q.prepare("SELECT COUNT(*) FROM class_subject WHERE class_id2=? AND subject_id2=?");
     q.addBindValue(classes[col].first);
     q.addBindValue(subjects[row].first);
-    qDebug() << classes[col].first << subjects[row].first;
     if (!q.exec()) {
         funcs::dataBaseError(this, q);
         return;
@@ -562,10 +561,8 @@ void editViewMarks::toggleSubject() {
     q.next();
     int cnt = q.value(0).toInt();
     if (cnt == 0) {
-        qDebug() << "ins";
         q.prepare("INSERT INTO class_subject VALUES (?, ?)");
     } else {
-        qDebug() << "del";
         q.prepare("DELETE FROM class_subject WHERE class_id2=? AND subject_id2=?");
     }
     q.addBindValue(classes[col].first);

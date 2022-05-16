@@ -11,11 +11,14 @@ studentsReview::studentsReview(QWidget *parent) :
     QWidget(), parent(parent), ui(new Ui::studentsReview) {
     ui->setupUi(this);
 
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->spinBox_year->setValue(kAnyYear);
-    ui->tableWidget->setColumnCount(6);
+    ui->tableWidget->setColumnCount(4);
     ui->tableWidget->setHorizontalHeaderLabels({
                                                    "Класс", "Дата рождения",
-                                                   "Дата начала обучения", "Адрес", "ФИО родителя", "Пол"
+                                                   "Дата начала обучения",
+//                                                   "Адрес", "ФИО родителя",
+                                                   "Пол"
                                                });
     ui->tableWidget->resizeColumnsToContents();
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -24,14 +27,46 @@ studentsReview::studentsReview(QWidget *parent) :
     connect(ui->tableWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(slotCustomMenuRequested(QPoint)));
 
-    QSqlQuery q("SELECT gender_type FROM gender_types");
-    q.exec();
+    QSqlQuery q("SELECT gender_type FROM gender_types", conn);
+    if (!q.exec()) {
+        funcs::dataBaseError(this, q);
+        return;
+    }
     ui->comboBox_gender->addItem(kAnyGender);
     while (q.next()) {
         ui->comboBox_gender->addItem(q.value(0).toString());
     }
 
+    prepareNumbers();
+    prepareLetters();
+
     connectSlots();
+}
+
+void studentsReview::prepareNumbers() {
+    QSqlQuery q(conn);
+    if (!q.exec("SELECT DISTINCT class_number FROM classes ORDER BY class_number")) {
+        funcs::dataBaseError(this, q);
+        return;
+    }
+    while (q.next()) {
+        ui->comboBox_classNum->addItem(q.value(0).toString());
+    }
+}
+
+void studentsReview::prepareLetters() {
+    QString cl = ui->comboBox_classNum->currentText();
+    QSqlQuery q(conn);
+    q.prepare("SELECT DISTINCT class_letter FROM classes WHERE class_number=?");
+    q.addBindValue(cl);
+    if (!q.exec()) {
+        funcs::dataBaseError(this, q);
+        return;
+    }
+    ui->comboBox_classLetter->clear();
+    while (q.next()) {
+        ui->comboBox_classLetter->addItem(q.value(0).toString());
+    }
 }
 
 studentsReview::~studentsReview() {
@@ -49,8 +84,9 @@ void studentsReview::cancel() {
 
 void studentsReview::connectSlots() {
     connect(ui->pushButton_cancel, &QPushButton::clicked, this, &studentsReview::cancel);
-    connect(ui->lineEdit_classNum, &QLineEdit::textEdited, this, &studentsReview::printStudents);
-    connect(ui->lineEdit_classLetter, &QLineEdit::textEdited, this, &studentsReview::printStudents);
+    connect(ui->comboBox_classNum, &QComboBox::currentTextChanged, this, &studentsReview::prepareLetters);
+    connect(ui->comboBox_classNum, &QComboBox::currentTextChanged, this, &studentsReview::printStudents);
+    connect(ui->comboBox_classLetter, &QComboBox::currentTextChanged, this, &studentsReview::printStudents);
     connect(ui->pushButton_printStudent, &QPushButton::clicked, this, &studentsReview::printStudents);
     connect(ui->comboBox_gender, &QComboBox::currentTextChanged, this, &studentsReview::printStudents);
     connect(ui->comboBox_isKicked, &QComboBox::currentTextChanged, this, &studentsReview::printStudents);
@@ -90,6 +126,9 @@ void studentsReview::printStudents() {
         data.erase(data.find("class_letter"));
         fullNames.append(data["full_name"]);
         data.erase(data.find("full_name"));
+
+        data.erase(data.find("address"));
+        data.erase(data.find("parent_full_name"));
         // place data
         for (int i = 0; i < str2column.size(); i++) {
             if (str2column[i].second == kText) {
@@ -116,7 +155,8 @@ QSqlQuery studentsReview::generateQuery() {
                 "INNER JOIN gender_types gt on pupils.student_gender = gt.gender_type_id "
                 "INNER JOIN classes c on pupils.pupil_class = c.class_id ";
     QPair<QString, QStringList> classInfo =
-        funcs::getPupilClassQuery("pupil_class", ui->lineEdit_classNum->text(), ui->lineEdit_classLetter->text());
+        funcs::getPupilClassQuery("pupil_class", ui->comboBox_classNum->currentText(),
+                                  ui->comboBox_classLetter->currentText());
 
     q += " WHERE " + classInfo.first + " ";
     for (const auto &i: classInfo.second) {

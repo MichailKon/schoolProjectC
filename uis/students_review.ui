@@ -16,26 +16,7 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="4">
-      <widget class="QSpinBox" name="spinBox_year">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimum">
-        <number>-1</number>
-       </property>
-       <property name="maximum">
-        <number>999999999</number>
-       </property>
-       <property name="value">
-        <number>2020</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="6">
+     <item row="0" column="0" colspan="5">
       <widget class="QPushButton" name="pushButton_cancel">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -69,27 +50,7 @@ background: rgb(255, 255, 255);
        </property>
       </widget>
      </item>
-     <item row="1" column="5">
-      <widget class="QComboBox" name="comboBox_isKicked">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <item>
-        <property name="text">
-         <string>Обучаются сейчас</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Отчислены/ушли</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="3" column="0" colspan="6">
+     <item row="3" column="0" colspan="5">
       <widget class="QPushButton" name="pushButton_printStudent">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -123,17 +84,27 @@ background: rgb(255, 255, 255);
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <widget class="QComboBox" name="comboBox_gender">
+     <item row="1" column="4">
+      <widget class="QComboBox" name="comboBox_isKicked">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <item>
+        <property name="text">
+         <string>Обучаются сейчас</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Отчислены/ушли</string>
+        </property>
+       </item>
       </widget>
      </item>
-     <item row="2" column="0" colspan="6">
+     <item row="2" column="0" colspan="5">
       <widget class="QTableWidget" name="tableWidget">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -167,8 +138,11 @@ background: rgb(255, 255, 255);
        </attribute>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit_classNum">
+     <item row="1" column="0">
+      <widget class="QComboBox" name="comboBox_classNum"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="comboBox_gender">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -177,20 +151,42 @@ background: rgb(255, 255, 255);
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="lineEdit_classLetter">
+     <item row="1" column="3">
+      <widget class="QSpinBox" name="spinBox_year">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="minimum">
+        <number>-1</number>
+       </property>
+       <property name="maximum">
+        <number>999999999</number>
+       </property>
+       <property name="value">
+        <number>2020</number>
+       </property>
       </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="comboBox_classLetter"/>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pushButton_cancel</tabstop>
+  <tabstop>comboBox_classNum</tabstop>
+  <tabstop>comboBox_classLetter</tabstop>
+  <tabstop>comboBox_gender</tabstop>
+  <tabstop>spinBox_year</tabstop>
+  <tabstop>comboBox_isKicked</tabstop>
+  <tabstop>tableWidget</tabstop>
+  <tabstop>pushButton_printStudent</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

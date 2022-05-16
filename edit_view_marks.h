@@ -32,7 +32,7 @@ namespace Ui { class editViewMarks; }
 QT_END_NAMESPACE
 
 class propType : public QPair<int, int> {
-public:
+ public:
     propType(int a, int b) {
         this->first = a;
         this->second = b;
@@ -48,20 +48,20 @@ public:
 };
 
 class editViewMarks : public QWidget {
-Q_OBJECT
+ Q_OBJECT
 
-public:
+ public:
     explicit editViewMarks(QWidget *parent = nullptr);
 
     ~editViewMarks() override;
 
-public slots:
+ public slots:
 
     void cancel();
 
     void setDatabase(const QSqlDatabase &other);
 
-private slots:
+ private slots:
 
     void printViewMarks();
 
@@ -75,34 +75,34 @@ private slots:
 
     void toggleSubject();
 
-private:
+ private:
     Ui::editViewMarks *ui;
     QWidget *parent;
     QSqlDatabase conn;
 
     const QMap<QString, propType> propTypes = {
-            {"Одна 2", {1, 2}},
-            {"Одна 3", {1, 3}},
-            {"Одна 4", {1, 4}},
-            {"Одна 5", {1, 5}},
-            {"Две 2",  {2, 2}},
-            {"Две 3",  {2, 3}},
-            {"Две 4",  {2, 4}},
-            {"Две 5",  {2, 5}},
+        {"Одна 2", {1, 2}},
+        {"Одна 3", {1, 3}},
+        {"Одна 4", {1, 4}},
+        {"Одна 5", {1, 5}},
+        {"Две 2", {2, 2}},
+        {"Две 3", {2, 3}},
+        {"Две 4", {2, 4}},
+        {"Две 5", {2, 5}},
     };
 
     const QString allProps = "Все люди";
     const QString allClasses = "Вся параллель";
 
     const QMap<QString, KickedType> convertKicked = {
-            {"Оба типа",  kAny},
-            {"Обучаются", kStudying},
-            {"Отчислены", kKicked}
+        {"Оба типа", kAny},
+        {"Обучаются", kStudying},
+        {"Отчислены", kKicked}
     };
 
     const QMap<QString, ShownSubjectsType> convertShown = {
-            {"Только предметы с оценками",   kShowMarks},
-            {"Только предметы из 3 вкладки", kShowExist}
+        {"Только предметы с оценками", kShowMarks},
+        {"Только предметы из 3 вкладки", kShowExist}
     };
 
     QVector<QPair<QString, int>> editStudentIds, editSubjectIds;

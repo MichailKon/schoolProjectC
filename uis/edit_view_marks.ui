@@ -26,7 +26,7 @@
      <item row="1" column="0">
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>1</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="viewMarks">
         <attribute name="title">
@@ -235,21 +235,23 @@
         </attribute>
         <layout class="QGridLayout" name="gridLayout_4">
          <item row="0" column="0">
-          <layout class="QGridLayout" name="gridLayout_editSubjects">
-           <item row="0" column="0">
-            <widget class="QComboBox" name="comboBox_classNum_3"/>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox_classLetter_3"/>
-           </item>
-           <item row="1" column="0" colspan="2">
-            <widget class="QTableWidget" name="tableWidget_editSubjects">
-             <property name="rowCount">
-              <number>0</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <widget class="QComboBox" name="comboBox_classNum3"/>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QTableWidget" name="tableWidget_editSubjects"/>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="comboBox_classLetter3">
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+           <property name="locale">
+            <locale language="Russian" country="Russia"/>
+           </property>
+           <property name="insertPolicy">
+            <enum>QComboBox::InsertAlphabetically</enum>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

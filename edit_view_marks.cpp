@@ -7,12 +7,12 @@
 #include "edit_view_marks.h"
 #include "uis/ui_edit_view_marks.h"
 
-
 editViewMarks::editViewMarks(QWidget *parent) :
-        QWidget(), parent(parent), ui(new Ui::editViewMarks) {
+    QWidget(), parent(parent), ui(new Ui::editViewMarks) {
     ui->setupUi(this);
 
     ui->tableWidget_viewMarks->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableWidget_editSubjects->setContextMenuPolicy(Qt::CustomContextMenu);
     prepare();
     connectSlots();
 }
@@ -31,7 +31,7 @@ void editViewMarks::prepare() {
         ui->comboBox_type->addItem(q.value(0).toString());
         ui->comboBox_type2->addItem(q.value(0).toString());
     }
-
+    // make kicked
     {
         QMapIterator it(convertKicked);
         while (it.hasNext()) {
@@ -40,6 +40,7 @@ void editViewMarks::prepare() {
             ui->comboBox_isKicked2->addItem(it.key());
         }
     }
+    // make shown
     {
         QMapIterator it(convertShown);
         while (it.hasNext()) {
@@ -48,6 +49,26 @@ void editViewMarks::prepare() {
             ui->comboBox_shownSubjects2->addItem(it.key());
         }
     }
+    // add numbers
+    if (!q.exec("SELECT DISTINCT class_number FROM classes ORDER BY class_number")) {
+        funcs::dataBaseError(this, q);
+        cancel();
+    }
+    ui->comboBox_classNum3->clear();
+    while (q.next()) {
+        ui->comboBox_classNum3->addItem(q.value(0).toString());
+    }
+    // add letters
+    if (!q.exec("SELECT DISTINCT class_letter FROM classes ORDER BY class_letter")) {
+        funcs::dataBaseError(this, q);
+        cancel();
+    }
+    ui->comboBox_classLetter3->clear();
+    ui->comboBox_classLetter3->addItem(allClasses);
+    while (q.next()) {
+        ui->comboBox_classLetter3->addItem(q.value(0).toString());
+    }
+    printSubjects();
 }
 
 void editViewMarks::connectSlots() {
@@ -55,6 +76,10 @@ void editViewMarks::connectSlots() {
     connect(ui->pushButton_printView, &QPushButton::clicked, this, &editViewMarks::printViewMarks);
     connect(ui->pushButton_printEdit, &QPushButton::clicked, this, &editViewMarks::printEditMarks);
     connect(ui->tableWidget_editMarks, &QTableWidget::itemChanged, this, &editViewMarks::editMark);
+    connect(ui->tableWidget_editSubjects, &QTableWidget::customContextMenuRequested,
+            this, &editViewMarks::subjectsEditMenuRequested);
+    connect(ui->comboBox_classNum3, &QComboBox::currentTextChanged, this, &editViewMarks::printSubjects);
+    connect(ui->comboBox_classLetter3, &QComboBox::currentTextChanged, this, &editViewMarks::printSubjects);
 }
 
 void editViewMarks::cancel() {
@@ -81,7 +106,7 @@ void editViewMarks::printViewMarks() {
     QStringList columns = funcs::getColumns(q);
     if (ui->comboBox_property->currentText() != allProps) {
         QStringList pupils;
-        auto[cnt, mark] = *propTypes.find(ui->comboBox_property->currentText());
+        auto [cnt, mark] = *propTypes.find(ui->comboBox_property->currentText());
         QMap<QString, int> cntMarks;
         ui->tableWidget_viewMarks->setColumnCount(cnt);
         for (int i = 1; i <= cnt; i++) {
@@ -130,7 +155,7 @@ void editViewMarks::printViewMarks() {
             }
         } while (q.next());
     } else {
-        QStringList subjects;
+        QStringList curSubjects;
         QMap<int, int> pupil2row;
         QVector<QPair<QString, int>> pupils;
         {
@@ -142,12 +167,12 @@ void editViewMarks::printViewMarks() {
                 }
                 auto data = funcs::compress(columns, nowValues);
                 pupilsSet.insert({data["full_name"], data["which_mark"].toInt()});
-                if (!subjects.contains(data["subject_type"])) {
-                    subjects.append(data["subject_type"]);
+                if (!curSubjects.contains(data["subject_type"])) {
+                    curSubjects.append(data["subject_type"]);
                 }
             }
             ui->tableWidget_viewMarks->setRowCount(pupilsSet.size());
-            for (auto &i : pupilsSet) {
+            for (auto &i: pupilsSet) {
                 pupils.append(i);
             }
             qSort(pupils);
@@ -158,9 +183,9 @@ void editViewMarks::printViewMarks() {
             }
         }
 
-        qSort(subjects);
-        ui->tableWidget_viewMarks->setColumnCount(subjects.size());
-        ui->tableWidget_viewMarks->setHorizontalHeaderLabels(subjects);
+        qSort(curSubjects);
+        ui->tableWidget_viewMarks->setColumnCount(curSubjects.size());
+        ui->tableWidget_viewMarks->setHorizontalHeaderLabels(curSubjects);
 
         q.exec();
         while (q.next()) {
@@ -170,7 +195,7 @@ void editViewMarks::printViewMarks() {
             }
             auto data = funcs::compress(columns, nowValues);
             int row = pupil2row[data["which_mark"].toInt()];
-            int col = subjects.indexOf(data["subject_type"]);
+            int col = curSubjects.indexOf(data["subject_type"]);
             auto *newItem = new QTableWidgetItem(data["mark_value"]);
             ui->tableWidget_viewMarks->setItem(row, col, newItem);
         }
@@ -241,7 +266,7 @@ QSqlQuery editViewMarks::getStudentQuery(const QString &num, const QString &let,
     }
 
     res.prepare(query);
-    for (const auto &i : data) {
+    for (const auto &i: data) {
         res.addBindValue(i);
     }
 
@@ -429,4 +454,125 @@ void editViewMarks::editMark(const QTableWidgetItem *item) {
         qDebug() << 6 << q.lastError();
         return;
     }
+}
+
+void editViewMarks::printSubjects() {
+    ui->tableWidget_editSubjects->setRowCount(0);
+    ui->tableWidget_editSubjects->setColumnCount(0);
+    classes.clear(), subjects.clear();
+
+    QSqlQuery q(conn);
+    q.prepare("SELECT subject_id, subject_type FROM subject_types");
+    if (!q.exec()) {
+        funcs::dataBaseError(this, q);
+        return;
+    }
+    while (q.next()) {
+        subjects.push_back({q.value(0).toInt(), q.value(1).toString()});
+        int row = ui->tableWidget_editSubjects->rowCount();
+        ui->tableWidget_editSubjects->setRowCount(row + 1);
+        ui->tableWidget_editSubjects->setVerticalHeaderItem(row, new QTableWidgetItem(subjects.back().second));
+    }
+
+    if (ui->comboBox_classLetter3->currentText() != allClasses) {
+        q.prepare("SELECT class_id, class_number, class_letter FROM classes "
+                  "WHERE class_number=? AND class_letter=?");
+        q.addBindValue(ui->comboBox_classNum3->currentText());
+        q.addBindValue(ui->comboBox_classLetter3->currentText());
+    } else {
+        q.prepare("SELECT class_id, class_number, class_letter FROM classes WHERE class_number=?");
+        q.addBindValue(ui->comboBox_classNum3->currentText());
+    }
+    if (!q.exec()) {
+        funcs::dataBaseError(this, q);
+        return;
+    }
+    while (q.next()) {
+        classes.push_back({q.value(0).toInt(), q.value(1).toString() + q.value(2).toString()});
+        int col = ui->tableWidget_editSubjects->columnCount();
+        ui->tableWidget_editSubjects->setColumnCount(col + 1);
+        ui->tableWidget_editSubjects->setHorizontalHeaderItem(col, new QTableWidgetItem(classes.back().second));
+    }
+
+    for (int i = 0; i < ui->tableWidget_editSubjects->rowCount(); i++) {
+        for (int j = 0; j < ui->tableWidget_editSubjects->columnCount(); j++) {
+            ui->tableWidget_editSubjects->setItem(i, j, new QTableWidgetItem(""));
+            ui->tableWidget_editSubjects->item(i, j)->setBackground(Qt::red);
+        }
+    }
+
+    if (ui->comboBox_classLetter3->currentText() != allClasses) {
+        q.prepare("SELECT subject_id2, class_id2 FROM class_subject "
+                  "WHERE class_id2 IN (SELECT class_id FROM classes WHERE class_number=? AND class_letter=?)");
+        q.addBindValue(ui->comboBox_classNum3->currentText());
+        q.addBindValue(ui->comboBox_classLetter3->currentText());
+    } else {
+        q.prepare("SELECT subject_id2, class_id2 FROM class_subject "
+                  "WHERE class_id2 IN (SELECT class_id FROM classes WHERE class_number=?)");
+        q.addBindValue(ui->comboBox_classNum3->currentText());
+    }
+    if (!q.exec()) {
+        funcs::dataBaseError(this, q);
+        return;
+    }
+    while (q.next()) {
+        int subj = q.value(0).toInt(), cl = q.value(1).toInt();
+        int x = -1, y = -1;
+        for (int i = 0; i < subjects.size(); i++) {
+            for (int j = 0; j < classes.size(); j++) {
+                if (subjects[i].first == subj && classes[j].first == cl) {
+                    if (x == -1) {
+                        x = i, y = j;
+                    } else {
+                        assert(false);
+                    }
+                }
+            }
+        }
+        assert(x != -1);
+        ui->tableWidget_editSubjects->item(x, y)->setBackground(Qt::green);
+    }
+
+    ui->tableWidget_editSubjects->blockSignals(false);
+}
+
+void editViewMarks::subjectsEditMenuRequested(QPoint pos) {
+    auto *menu = new QMenu(this);
+    if (ui->tableWidget_editSubjects->selectedItems().size() != 1) {
+        return;
+    }
+    auto *toggleSubject = new QAction("Добавить/убрать предмет", this);
+    connect(toggleSubject, &QAction::triggered, this, &editViewMarks::toggleSubject);
+    menu->addAction(toggleSubject);
+    menu->popup(ui->tableWidget_editSubjects->viewport()->mapToGlobal(pos));
+}
+
+void editViewMarks::toggleSubject() {
+    int row = ui->tableWidget_editSubjects->selectionModel()->currentIndex().row();
+    int col = ui->tableWidget_editSubjects->selectionModel()->currentIndex().column();
+    QSqlQuery q(conn);
+    q.prepare("SELECT COUNT(*) FROM class_subject WHERE class_id2=? AND subject_id2=?");
+    q.addBindValue(classes[col].first);
+    q.addBindValue(subjects[row].first);
+    qDebug() << classes[col].first << subjects[row].first;
+    if (!q.exec()) {
+        funcs::dataBaseError(this, q);
+        return;
+    }
+    q.next();
+    int cnt = q.value(0).toInt();
+    if (cnt == 0) {
+        qDebug() << "ins";
+        q.prepare("INSERT INTO class_subject VALUES (?, ?)");
+    } else {
+        qDebug() << "del";
+        q.prepare("DELETE FROM class_subject WHERE class_id2=? AND subject_id2=?");
+    }
+    q.addBindValue(classes[col].first);
+    q.addBindValue(subjects[row].first);
+    if (!q.exec()) {
+        funcs::dataBaseError(this, q);
+        return;
+    }
+    ui->tableWidget_editSubjects->item(row, col)->setBackground(cnt == 0 ? Qt::green : Qt::red);
 }

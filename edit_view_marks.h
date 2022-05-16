@@ -11,6 +11,8 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlRecord>
 #include <QtAlgorithms>
+#include <QMenu>
+#include <QAction>
 #include <QTableWidgetItem>
 #include "useful_funcs.h"
 
@@ -67,6 +69,12 @@ private slots:
 
     void editMark(const QTableWidgetItem *item);
 
+    void printSubjects();
+
+    void subjectsEditMenuRequested(QPoint pos);
+
+    void toggleSubject();
+
 private:
     Ui::editViewMarks *ui;
     QWidget *parent;
@@ -84,6 +92,7 @@ private:
     };
 
     const QString allProps = "Все люди";
+    const QString allClasses = "Вся параллель";
 
     const QMap<QString, KickedType> convertKicked = {
             {"Оба типа",  kAny},
@@ -97,6 +106,7 @@ private:
     };
 
     QVector<QPair<QString, int>> editStudentIds, editSubjectIds;
+    QVector<QPair<int, QString>> classes, subjects;
 
     void prepare();
 
